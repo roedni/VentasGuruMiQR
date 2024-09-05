@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar QR</title>
+    <link rel="stylesheet" href="miqr.css"> <!-- Apunta a tu archivo de estilos existente -->
+</head>
+<body>
+    <div class="container">
+        <h1 class="fade-in"></h1>
+        <img src=image1.png alt="Imagen" class="fade-in" style="width: 200px; height: auto; margin-top: 20px;">
+        
+        <input type="text" id="editableLinkBox" class="editable-box" placeholder="Escribe aquí tu Alias o CBU..." />
+
+        <button id="generateQR">Generar Código QR</button>
+        
+        <p class="animated-text">"Ingresa un alias o CBU en la caja de texto, y luego presiona el botón para generar un código QR."</p>
+
+        <div id="qrCode" style="margin-top: 20px;"></div>
+    </div>
+
+    <div id="qrCode"></div>
+
+    <script>
+        
+        // Limpiar el placeholder cuando la caja de texto recibe foco
+        document.getElementById('editableLinkBox').addEventListener('focus', function() {
+            if (this.value === this.placeholder) {
+                this.value = '';
+            }
+        });
+
+        // Si la caja de texto está vacía, restablecer el placeholder al perder el foco
+        document.getElementById('editableLinkBox').addEventListener('blur', function() {
+            if (this.value === '') {
+                this.value = this.placeholder;
+            }
+        });
+        
+        
+        
+        document.getElementById('generateQR').addEventListener('click', function() {
+            const linkBoxValue = document.getElementById('editableLinkBox').value;
+            const baseURL = 'https://roedni.github.io/VentasGuruAlias/';
+            const fullURL = baseURL + '?link=' + encodeURIComponent(linkBoxValue);
+
+            // Generar el código QR usando el servicio de goqr.me
+            const qrImage = document.createElement('img');
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(fullURL)}`;
+            qrImage.alt = 'Código QR generado';
+
+            const qrCodeDiv = document.getElementById('qrCode');
+            qrCodeDiv.innerHTML = ''; // Limpiar cualquier QR anterior
+            qrCodeDiv.appendChild(qrImage); // Agregar el nuevo QR
+
+            // Mostrar el marco del QR con el efecto de fade-in
+            qrCodeDiv.style.display = 'inline-block';
+        });
+    </script>
+</body>
+
+
+
+</html>
